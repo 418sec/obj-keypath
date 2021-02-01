@@ -74,3 +74,11 @@ test('setting missing keys creates them', function (t) {
   t.equal(data.missing.nested, 'huh')
   t.end()
 })
+
+test('disallow protopath override', function (t) {
+  var obj = {}
+
+  t.throws(() => keypath.set(obj, '__proto__.polluted', 'Yes'))
+  t.throws(() => keypath.set(obj, 'constructor.prototype.polluted', 'Yes'))
+  t.end()
+})
