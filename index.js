@@ -10,23 +10,23 @@ module.exports = {
   delete: del
 }
 
-var ILLEGAL_KEYS = ["constructor", "__proto__"];
+var ILLEGAL_KEYS = ['constructor', '__proto__']
 
 function isIllegalKey (key) {
-  return ILLEGAL_KEYS.indexOf(key) !== -1;
+  return ILLEGAL_KEYS.indexOf(key) !== -1
 }
 
-function isProtoPath(path) {
+function isProtoPath (path) {
   return Array.isArray(path)
     ? path.some(isIllegalKey)
-    : typeof path === "string"
+    : typeof path === 'string'
       ? isIllegalKey(path)
-      : false;
+      : false
 }
 
 function disallowProtoPath (path) {
   if (isProtoPath(path)) {
-    throw new Error("Unsafe path encountered: " + path);
+    throw new Error('Unsafe path encountered: ' + path)
   }
 }
 
