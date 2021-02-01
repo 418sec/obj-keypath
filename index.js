@@ -10,6 +10,26 @@ module.exports = {
   delete: del
 }
 
+var ILLEGAL_KEYS = ["constructor", "__proto__"];
+
+function isIllegalKey (key) {
+  return ILLEGAL_KEYS.indexOf(key) !== -1;
+}
+
+function isProtoPath(path) {
+  return Array.isArray(path)
+    ? path.some(isIllegalKey)
+    : typeof path === "string"
+      ? isIllegalKey(path)
+      : false;
+}
+
+function disallowProtoPath (path) {
+  if (isProtoPath(path)) {
+    throw new Error("Unsafe path encountered: " + path);
+  }
+}
+
 function get (data, key, split) {
   if (!key) return xtend(data)
   var keys = parseKeys(key, split)
@@ -29,6 +49,7 @@ function get (data, key, split) {
 function set (data, key, value, split, original) {
   original = original || data
   var keys = parseKeys(key, split)
+  disallowProtoPath(keys)
   var current = keys[0]
   var next = keys[1]
 
